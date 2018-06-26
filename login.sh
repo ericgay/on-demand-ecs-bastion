@@ -8,12 +8,13 @@ fi
 
 PROFILE=$1
 SSH_PUBLIC_KEY=$(<$2)
+
 CLUSTER=FanCoin
 TASK_NAME=bastion
 
 echo Starting SSH bastion...
 
-OVERRIDES="{ \"containerOverrides\": [ {  \"name\": \"bastion\", \"environment\": [ { \"name\": \"ssh_public_key\", \"value\": \"${SSH_PUBLIC_KEY}\" } ] } ]}"
+OVERRIDES="{ \"containerOverrides\": [ {  \"name\": \"bastion\", \"environment\": [ { \"name\": \"SSH_PUBLIC_KEY\", \"value\": \"${SSH_PUBLIC_KEY}\" } ] } ]}"
 RUNTASK=$( aws ecs run-task --profile $PROFILE --launch-type "FARGATE" --cluster=$CLUSTER --task-definition=$TASK_NAME --overrides="$OVERRIDES" --network-configuration=awsvpcConfiguration='{subnets=["subnet-b9ae42e5"],securityGroups=["sg-01948bf26cb8e78d5"],assignPublicIp="ENABLED"}' --started-by "$(aws iam get-user --profile $PROFILE | jq -r '.User.UserName')" )
 [ $? = 0 ] || exit 1
 
