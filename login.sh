@@ -31,7 +31,7 @@ PUBLIC_IP=$(aws ec2 describe-network-interfaces --profile $PROFILE --network-int
 
 echo SSH-ing to: bastion@$PUBLIC_IP
 
-ssh -o "StrictHostKeyChecking no" bastion@$PUBLIC_IP
+ssh -A -o "StrictHostKeyChecking no" bastion@$PUBLIC_IP
 
 echo Stopping task...
 aws ecs stop-task --profile $PROFILE --cluster $CLUSTER --task $TASK_ID >/dev/null
