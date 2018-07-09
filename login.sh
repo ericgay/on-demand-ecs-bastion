@@ -1,13 +1,15 @@
 #!/bin/bash
 
-if [ $# -ne 2 ]; then
+if [ $# -lt 2 ]; then
     echo "Please specify an aws profile name and path to a public key"
-    echo "usage: ./login.sh aws-profile-name ~/.ssh/keyfile.pub"
+    echo "usage: ./login.sh aws-profile-name ~/.ssh/keyfile.pub [options]"
+    echo "e.g., to tunnel psql: '-R 54320:hostname:5432'"
     exit 1
 fi
 
 PROFILE=$1
 SSH_PUBLIC_KEY=$(<$2)
+OPTIONS=$3
 
 CLUSTER=FanCoin
 TASK_NAME=bastion
@@ -29,9 +31,9 @@ echo Found network interface $ENI_ID
 
 PUBLIC_IP=$(aws ec2 describe-network-interfaces --profile $PROFILE --network-interface-ids $ENI_ID | jq -r '.NetworkInterfaces[0].Association.PublicIp')
 
-echo SSH-ing to: bastion@$PUBLIC_IP
+echo ssh $OPTIONS bastion@$PUBLIC_IP
 
-ssh -A -o "StrictHostKeyChecking no" bastion@$PUBLIC_IP
+ssh -A -o "StrictHostKeyChecking no" $OPTIONS bastion@$PUBLIC_IP
 
 echo Stopping task...
 aws ecs stop-task --profile $PROFILE --cluster $CLUSTER --task $TASK_ID >/dev/null
