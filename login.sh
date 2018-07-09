@@ -3,7 +3,7 @@
 if [ $# -lt 2 ]; then
     echo "Please specify an aws profile name and path to a public key"
     echo "usage: ./login.sh aws-profile-name ~/.ssh/keyfile.pub [options]"
-    echo "e.g., to tunnel psql: '-R 54320:hostname:5432'"
+    echo "e.g., to tunnel psql: '-L 54320:hostname:5432'"
     exit 1
 fi
 
