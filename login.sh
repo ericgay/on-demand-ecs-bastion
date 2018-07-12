@@ -2,16 +2,16 @@
 
 if [ $# -lt 2 ]; then
     echo "Please specify an aws profile name and path to a public key"
-    echo "usage: ./login.sh aws-profile-name ~/.ssh/keyfile.pub [options]"
+    echo "usage: ./login.sh aws-profile-name ecs-cluster-name ~/.ssh/keyfile.pub [options]"
     echo "e.g., to tunnel psql: '-L 54320:hostname:5432'"
     exit 1
 fi
 
 PROFILE=$1
-SSH_PUBLIC_KEY=$(<$2)
-OPTIONS=$3
+CLUSTER=$2
+SSH_PUBLIC_KEY=$(<$3)
+OPTIONS=$4
 
-CLUSTER=FanCoin
 TASK_NAME=bastion
 
 echo Starting SSH bastion...
